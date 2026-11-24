@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
 import '../utils/estados.dart';
 import '../widgets/glass_card.dart';
 import 'documentos_page.dart';
@@ -20,7 +21,11 @@ class _SeguimientoPageState extends State<SeguimientoPage> {
       .eq('alumno_id', _db.auth.currentUser!.id)
       .order('created_at', ascending: false);
 
-  void _recargar() => setState(() => _f = _cargar());
+  void _recargar() {
+    setState(() {
+      _f = _cargar();
+    });
+  }
 
   Future<void> _borrar(dynamic id) async {
     try {
@@ -32,7 +37,7 @@ class _SeguimientoPageState extends State<SeguimientoPage> {
       if (rutas.isNotEmpty) await _db.storage.from('documentos').remove(rutas);
     } catch (_) {}
     await _db.from('solicitudes').delete().eq('id', id);
-        await _db.from('solicitudes').delete().eq('id', id);
+    await _db.from('solicitudes').delete().eq('id', id);
     if (!mounted) return;
     _recargar();
   }
