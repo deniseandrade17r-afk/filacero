@@ -1,12 +1,20 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
 import '../theme/app_theme.dart';
 import '../widgets/glass_card.dart';
+import 'solicitar_tramite_page.dart';
 
 class CatalogoPage extends StatefulWidget {
-  const CatalogoPage({super.key, required this.titulo, this.saludo = false});
+  const CatalogoPage({
+    super.key,
+    required this.titulo,
+    this.saludo = false,
+    this.encabezado,
+  });
   final String titulo;
   final bool saludo;
+  final Widget? encabezado;
   @override
   State<CatalogoPage> createState() => _CatalogoPageState();
 }
@@ -14,7 +22,7 @@ class CatalogoPage extends StatefulWidget {
 class _CatalogoPageState extends State<CatalogoPage> {
   final _db = Supabase.instance.client;
   late final Future<List<Map<String, dynamic>>> _tramites =
-      _db.from('tramites').select().order('nombre');
+      _db.from('tramites').select().eq('activo', true).order('nombre');
   late final Future<Map<String, dynamic>> _perfil =
       _db.from('profiles').select().eq('id', _db.auth.currentUser!.id).single();
 
@@ -35,6 +43,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
               ),
             ),
           ),
+        if (widget.encabezado != null) widget.encabezado!,
         Text(widget.titulo,
             style: t.titleLarge?.copyWith(fontWeight: FontWeight.w700)),
         const SizedBox(height: 16),
@@ -56,6 +65,14 @@ class _CatalogoPageState extends State<CatalogoPage> {
                   SizedBox(
                     width: w,
                     child: GlassCard(
+                      onTap: widget.saludo
+                          ? () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) =>
+                                        SolicitarTramitePage(tramite: tr)),
+                              )
+                          : null,
                       child: Row(children: [
                         Container(
                           padding: const EdgeInsets.all(12),

@@ -1,8 +1,10 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../theme/app_theme.dart';
 import '../utils/estados.dart';
 import '../widgets/glass_card.dart';
+import 'detalle_solicitud_page.dart';
 import 'documentos_page.dart';
 
 class SeguimientoPage extends StatefulWidget {
@@ -17,7 +19,8 @@ class _SeguimientoPageState extends State<SeguimientoPage> {
 
   Future<List<Map<String, dynamic>>> _cargar() => _db
       .from('solicitudes')
-      .select('id, estado, motivo, created_at, tramites(nombre, modalidad)')
+      .select(
+          'id, estado, motivo, observacion, created_at, tramites(nombre, modalidad)')
       .eq('alumno_id', _db.auth.currentUser!.id)
       .order('created_at', ascending: false);
 
@@ -36,7 +39,6 @@ class _SeguimientoPageState extends State<SeguimientoPage> {
       final rutas = [for (final d in docs) d['ruta'] as String];
       if (rutas.isNotEmpty) await _db.storage.from('documentos').remove(rutas);
     } catch (_) {}
-    await _db.from('solicitudes').delete().eq('id', id);
     await _db.from('solicitudes').delete().eq('id', id);
     if (!mounted) return;
     _recargar();
@@ -73,8 +75,9 @@ class _SeguimientoPageState extends State<SeguimientoPage> {
         FutureBuilder<List<Map<String, dynamic>>>(
           future: _f,
           builder: (context, snap) {
-            if (snap.hasError)
+            if (snap.hasError) {
               return const Text('No se pudieron cargar tus solicitudes.');
+            }
             if (!snap.hasData) {
               return const Center(
                 child: Padding(
@@ -97,6 +100,13 @@ class _SeguimientoPageState extends State<SeguimientoPage> {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 14),
                     child: GlassCard(
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) =>
+                              DetalleSolicitudPage(solicitudId: s['id']),
+                        ),
+                      ).then((_) => _recargar()),
                       child: Row(
                         children: [
                           Expanded(
@@ -121,6 +131,20 @@ class _SeguimientoPageState extends State<SeguimientoPage> {
                                   _fecha(s['created_at']),
                                   style: const TextStyle(fontSize: 12),
                                 ),
+                                if (s['estado'] == 'requiere_correccion' &&
+                                    (s['observacion'] ?? '')
+                                        .toString()
+                                        .isNotEmpty)
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 4),
+                                    child: Text(
+                                      'Corrección pedida: ${s['observacion']}',
+                                      style: const TextStyle(
+                                        color: AppColors.red,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
                               ],
                             ),
                           ),

@@ -1,6 +1,11 @@
+import 'dart:async';
 import 'dart:ui';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+import '../pages/mi_cuenta_page.dart';
+import '../utils/avisos.dart';
+import '../utils/navegacion.dart';
 import 'glass_card.dart';
 
 class NavItem {
@@ -20,8 +25,53 @@ class AppShell extends StatefulWidget {
 
 class _AppShellState extends State<AppShell> {
   int _index = 0;
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    noLeidas.value = 0;
+    actualizarNoLeidas();
+    _timer =
+        Timer.periodic(const Duration(seconds: 20), (_) => actualizarNoLeidas());
+    irAPestana.addListener(_alIrA);
+  }
+
+  @override
+  void dispose() {
+    irAPestana.removeListener(_alIrA);
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  void _alIrA() {
+    final etiqueta = irAPestana.value;
+    if (etiqueta == null) return;
+    final i = widget.items.indexWhere((it) => it.label == etiqueta);
+    if (i >= 0 && mounted) setState(() => _index = i);
+    irAPestana.value = null;
+  }
 
   Future<void> _salir() => Supabase.instance.client.auth.signOut();
+
+  void _cuenta() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const MiCuentaPage()),
+    );
+  }
+
+  Widget _icono(NavItem it) {
+    if (it.label != 'Avisos') return Icon(it.icon);
+    return ValueListenableBuilder<int>(
+      valueListenable: noLeidas,
+      builder: (_, n, __) => Badge(
+        label: Text('$n'),
+        isLabelVisible: n > 0,
+        child: Icon(it.icon),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +98,10 @@ class _AppShellState extends State<AppShell> {
             ]),
             actions: [
               IconButton(
+                  tooltip: 'Mi cuenta',
+                  icon: const Icon(Icons.account_circle_outlined),
+                  onPressed: _cuenta),
+              IconButton(
                   tooltip: 'Cerrar sesión',
                   icon: const Icon(Icons.logout),
                   onPressed: _salir),
@@ -63,7 +117,7 @@ class _AppShellState extends State<AppShell> {
                 onDestinationSelected: (i) => setState(() => _index = i),
                 destinations: [
                   for (final it in items)
-                    NavigationDestination(icon: Icon(it.icon), label: it.label),
+                    NavigationDestination(icon: _icono(it), label: it.label),
                 ],
               ),
             ),
@@ -101,17 +155,26 @@ class _AppShellState extends State<AppShell> {
                   destinations: [
                     for (final it in items)
                       NavigationRailDestination(
-                          icon: Icon(it.icon), label: Text(it.label)),
+                          icon: _icono(it), label: Text(it.label)),
                   ],
                   trailing: Expanded(
                     child: Align(
                       alignment: Alignment.bottomCenter,
                       child: Padding(
                         padding: const EdgeInsets.only(bottom: 16),
-                        child: IconButton(
-                            tooltip: 'Cerrar sesión',
-                            icon: const Icon(Icons.logout),
-                            onPressed: _salir),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                                tooltip: 'Mi cuenta',
+                                icon: const Icon(Icons.account_circle_outlined),
+                                onPressed: _cuenta),
+                            IconButton(
+                                tooltip: 'Cerrar sesión',
+                                icon: const Icon(Icons.logout),
+                                onPressed: _salir),
+                          ],
+                        ),
                       ),
                     ),
                   ),

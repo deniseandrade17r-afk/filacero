@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../theme/app_theme.dart';
 import '../widgets/glass_card.dart';
@@ -11,12 +11,23 @@ class TramitesAlumnoPage extends StatefulWidget {
 }
 
 class _TramitesAlumnoPageState extends State<TramitesAlumnoPage> {
+  String _busca = '';
   late final Future<List<Map<String, dynamic>>> _tramites = Supabase
       .instance.client
       .from('tramites')
       .select()
       .eq('activo', true)
       .order('nombre');
+
+  String _norm(String s) => s
+      .toLowerCase()
+      .replaceAll('á', 'a')
+      .replaceAll('é', 'e')
+      .replaceAll('í', 'i')
+      .replaceAll('ó', 'o')
+      .replaceAll('ú', 'u')
+      .replaceAll('ü', 'u')
+      .replaceAll('ñ', 'n');
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +37,14 @@ class _TramitesAlumnoPageState extends State<TramitesAlumnoPage> {
       children: [
         Text('¿Qué trámite necesitas?',
             style: t.titleLarge?.copyWith(fontWeight: FontWeight.w700)),
+        const SizedBox(height: 16),
+        TextField(
+          onChanged: (v) => setState(() => _busca = v),
+          decoration: const InputDecoration(
+            hintText: 'Buscar trámite',
+            prefixIcon: Icon(Icons.search),
+          ),
+        ),
         const SizedBox(height: 16),
         FutureBuilder<List<Map<String, dynamic>>>(
           future: _tramites,
@@ -37,11 +56,19 @@ class _TramitesAlumnoPageState extends State<TramitesAlumnoPage> {
                       padding: EdgeInsets.all(32),
                       child: CircularProgressIndicator()));
             }
+            final q = _norm(_busca.trim());
+            final lista = snap.data!
+                .where((tr) => q.isEmpty || _norm(tr['nombre']).contains(q))
+                .toList();
+            if (lista.isEmpty) {
+              return const GlassCard(
+                  child: Text('No encontramos trámites con ese nombre.'));
+            }
             return LayoutBuilder(builder: (context, c) {
               final cols = c.maxWidth >= 900 ? 3 : (c.maxWidth >= 600 ? 2 : 1);
               final w = (c.maxWidth - (cols - 1) * 16) / cols;
               return Wrap(spacing: 16, runSpacing: 16, children: [
-                for (final tr in snap.data!)
+                for (final tr in lista)
                   SizedBox(
                     width: w,
                     child: GlassCard(
