@@ -7,6 +7,7 @@ import '../pages/mi_cuenta_page.dart';
 import '../utils/avisos.dart';
 import '../utils/navegacion.dart';
 import 'glass_card.dart';
+import 'instalar_app_boton.dart';
 
 class NavItem {
   const NavItem(this.label, this.icon, this.page);
@@ -65,7 +66,7 @@ class _AppShellState extends State<AppShell> {
     if (it.label != 'Avisos') return Icon(it.icon);
     return ValueListenableBuilder<int>(
       valueListenable: noLeidas,
-      builder: (_, n, _) => Badge(
+      builder: (_, n, __) => Badge(
         label: Text('$n'),
         isLabelVisible: n > 0,
         child: Icon(it.icon),
@@ -97,6 +98,7 @@ class _AppShellState extends State<AppShell> {
                   style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
             ]),
             actions: [
+              const InstalarAppIcono(),
               IconButton(
                   tooltip: 'Mi cuenta',
                   icon: const Icon(Icons.account_circle_outlined),
@@ -165,6 +167,7 @@ class _AppShellState extends State<AppShell> {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
+                            const InstalarAppIcono(),
                             IconButton(
                                 tooltip: 'Mi cuenta',
                                 icon: const Icon(Icons.account_circle_outlined),
