@@ -3,7 +3,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../widgets/app_shell.dart';
 import 'catalogo_admin_page.dart';
-import 'catalogo_page.dart';
 import 'citas_page.dart';
 import 'demanda_page.dart';
 import 'horarios_page.dart';
@@ -13,7 +12,6 @@ import 'solicitudes_page.dart';
 import 'tramites_alumno_page.dart';
 import 'turnos_page.dart';
 import 'usuarios_page.dart';
-import '../widgets/asistente_tarjeta.dart';
 import 'inicio_alumno_page.dart';
 
 class RoleGate extends StatefulWidget {

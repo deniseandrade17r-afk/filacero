@@ -65,7 +65,7 @@ class _AppShellState extends State<AppShell> {
     if (it.label != 'Avisos') return Icon(it.icon);
     return ValueListenableBuilder<int>(
       valueListenable: noLeidas,
-      builder: (_, n, __) => Badge(
+      builder: (_, n, _) => Badge(
         label: Text('$n'),
         isLabelVisible: n > 0,
         child: Icon(it.icon),

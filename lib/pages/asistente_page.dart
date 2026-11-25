@@ -8,12 +8,12 @@ import 'solicitar_tramite_page.dart';
 
 class _Msg {
   _Msg.asistente({this.texto, this.tramite, this.opciones, this.sugerencias})
-      : delAsistente = true;
+    : delAsistente = true;
   _Msg.usuario(this.texto)
-      : delAsistente = false,
-        tramite = null,
-        opciones = null,
-        sugerencias = null;
+    : delAsistente = false,
+      tramite = null,
+      opciones = null,
+      sugerencias = null;
 
   final bool delAsistente;
   final String? texto;
@@ -37,7 +37,8 @@ class _AsistentePageState extends State<AsistentePage> {
 
   late final List<_Msg> _msgs = [
     _Msg.asistente(
-      texto: '¡Hola! Soy el búho de FilaCero. Cuéntame qué necesitas y te '
+      texto:
+          '¡Hola! Soy el búho de FilaCero. Cuéntame qué necesitas y te '
           'oriento: qué trámite es, qué documentos reunir, quién lo atiende y '
           'cuánto tarda.',
       sugerencias: const [
@@ -79,8 +80,11 @@ class _AsistentePageState extends State<AsistentePage> {
   void _bajar() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scroll.hasClients) {
-        _scroll.animateTo(_scroll.position.maxScrollExtent,
-            duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
+        _scroll.animateTo(
+          _scroll.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 250),
+          curve: Curves.easeOut,
+        );
       }
     });
   }
@@ -102,49 +106,66 @@ class _AsistentePageState extends State<AsistentePage> {
 
   void _responder(String texto) {
     if (!_listo || _tramites.isEmpty) {
-      _agregar(_Msg.asistente(
-          texto: 'Todavía no puedo consultar el catálogo. Revisa tu conexión '
-              'e intenta de nuevo en un momento.'));
+      _agregar(
+        _Msg.asistente(
+          texto:
+              'Todavía no puedo consultar el catálogo. Revisa tu conexión '
+              'e intenta de nuevo en un momento.',
+        ),
+      );
       return;
     }
     final a = analizar(texto, _tramites);
 
     if (a.seguro && a.candidatos.length == 1) {
-      _agregar(_Msg.asistente(
-          texto: 'Creo que lo que necesitas es el trámite '
-              '"${a.candidatos.first['nombre']}". Esto es lo que debes saber:'));
+      _agregar(
+        _Msg.asistente(
+          texto:
+              'Creo que lo que necesitas es el trámite '
+              '"${a.candidatos.first['nombre']}". Esto es lo que debes saber:',
+        ),
+      );
       _agregar(_Msg.asistente(tramite: a.candidatos.first));
       return;
     }
     if (a.candidatos.length > 1) {
-      _agregar(_Msg.asistente(
+      _agregar(
+        _Msg.asistente(
           texto: a.seguro
               ? 'Encontré varios trámites que podrían ser. ¿Cuál te interesa?'
               : 'No estoy seguro de cuál necesitas. ¿Alguno de estos?',
-          opciones: a.candidatos));
+          opciones: a.candidatos,
+        ),
+      );
       return;
     }
     if (a.candidatos.length == 1) {
-      _agregar(_Msg.asistente(
+      _agregar(
+        _Msg.asistente(
           texto: 'No estoy seguro, pero quizá te refieres a este trámite:',
-          opciones: a.candidatos));
+          opciones: a.candidatos,
+        ),
+      );
       return;
     }
     if (a.intencion != null) {
       _agregar(_Msg.asistente(texto: _respuestaIntencion(a.intencion!)));
       return;
     }
-    _agregar(_Msg.asistente(
-      texto: 'No logré identificar tu trámite. Puedes describirlo con otras '
-          'palabras (por ejemplo: "cambiar de carrera" o "justificar faltas"), '
-          'revisar el catálogo en la pestaña Trámites o consultar directamente '
-          'con tu coordinación.',
-      sugerencias: const [
-        'Quiero justificar mis faltas',
-        'Quiero estudiar dos carreras',
-        '¿Cómo agendo una cita?',
-      ],
-    ));
+    _agregar(
+      _Msg.asistente(
+        texto:
+            'No logré identificar tu trámite. Puedes describirlo con otras '
+            'palabras (por ejemplo: "cambiar de carrera" o "justificar faltas"), '
+            'revisar el catálogo en la pestaña Trámites o consultar directamente '
+            'con tu coordinación.',
+        sugerencias: const [
+          'Quiero justificar mis faltas',
+          'Quiero estudiar dos carreras',
+          '¿Cómo agendo una cita?',
+        ],
+      ),
+    );
   }
 
   String _respuestaIntencion(String id) {
@@ -181,9 +202,13 @@ class _AsistentePageState extends State<AsistentePage> {
   void _verPasos(Map<String, dynamic> t) {
     final pasos = ((t['pasos'] as List?) ?? []).cast<String>();
     if (pasos.isEmpty) {
-      _agregar(_Msg.asistente(
-          texto: 'Este trámite todavía no tiene pasos registrados. Consúltalo '
-              'con tu coordinación.'));
+      _agregar(
+        _Msg.asistente(
+          texto:
+              'Este trámite todavía no tiene pasos registrados. Consúltalo '
+              'con tu coordinación.',
+        ),
+      );
       return;
     }
     final b = StringBuffer('Pasos de "${t['nombre']}":\n');
@@ -208,27 +233,30 @@ class _AsistentePageState extends State<AsistentePage> {
   }
 
   Widget _avatar() => Padding(
-        padding: const EdgeInsets.only(right: 8, top: 2),
-        child: Image.asset(
-          'assets/buho.png',
-          height: 36,
-          width: 36,
-          errorBuilder: (_, __, ___) =>
-              const Icon(Icons.smart_toy_rounded, color: AppColors.navy),
-        ),
-      );
+    padding: const EdgeInsets.only(right: 8, top: 2),
+    child: Image.asset(
+      'assets/buho.png',
+      height: 36,
+      width: 36,
+      errorBuilder: (_, _, _) =>
+          const Icon(Icons.smart_toy_rounded, color: AppColors.navy),
+    ),
+  );
 
   Widget _caja(String texto, {bool usuario = false}) => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-        decoration: BoxDecoration(
-          color: usuario ? AppColors.navy : Colors.white.withValues(alpha: 0.8),
-          borderRadius: BorderRadius.circular(18),
-        ),
-        child: Text(texto,
-            style: TextStyle(color: usuario ? Colors.white : AppColors.ink)),
-      );
+    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+    decoration: BoxDecoration(
+      color: usuario ? AppColors.navy : Colors.white.withValues(alpha: 0.8),
+      borderRadius: BorderRadius.circular(18),
+    ),
+    child: Text(
+      texto,
+      style: TextStyle(color: usuario ? Colors.white : AppColors.ink),
+    ),
+  );
 
-  Widget _seccion(IconData icono, String titulo, List<String> lineas) => Padding(
+  Widget _seccion(IconData icono, String titulo, List<String> lineas) =>
+      Padding(
         padding: const EdgeInsets.only(top: 12),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -239,8 +267,10 @@ class _AsistentePageState extends State<AsistentePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(titulo,
-                      style: const TextStyle(fontWeight: FontWeight.w800)),
+                  Text(
+                    titulo,
+                    style: const TextStyle(fontWeight: FontWeight.w800),
+                  ),
                   for (final l in lineas) Text(l),
                 ],
               ),
@@ -263,35 +293,45 @@ class _AsistentePageState extends State<AsistentePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(t['nombre'],
-              style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 17)),
+          Text(
+            t['nombre'],
+            style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 17),
+          ),
           if ((t['descripcion'] ?? '').toString().isNotEmpty)
             Padding(
               padding: const EdgeInsets.only(top: 6),
               child: Text(t['descripcion']),
             ),
-          _seccion(Icons.folder_open_rounded, 'Documentos que debes reunir',
-              [...docs, ...opc.map((e) => '$e (opcional)')]),
+          _seccion(Icons.folder_open_rounded, 'Documentos que debes reunir', [
+            ...docs,
+            ...opc.map((e) => '$e (opcional)'),
+          ]),
           _seccion(Icons.person_outline, 'Quién lo atiende', [atiende]),
-          _seccion(Icons.schedule_rounded, 'Cuánto tarda',
-              [tiempo.isEmpty ? 'Por confirmar con la coordinación' : tiempo]),
+          _seccion(Icons.schedule_rounded, 'Cuánto tarda', [
+            tiempo.isEmpty ? 'Por confirmar con la coordinación' : tiempo,
+          ]),
           _seccion(Icons.place_outlined, 'Modalidad', [
             presencial
                 ? 'Presencial: después de enviar tus documentos agendas una cita.'
-                : 'En línea: no necesitas ir en persona.'
+                : 'En línea: no necesitas ir en persona.',
           ]),
-          if (obs.isNotEmpty) _seccion(Icons.info_outline, 'Importante', [obs.first]),
+          if (obs.isNotEmpty)
+            _seccion(Icons.info_outline, 'Importante', [obs.first]),
           const SizedBox(height: 14),
-          Wrap(spacing: 8, runSpacing: 8, children: [
-            ElevatedButton(
-              onPressed: () => _solicitar(t),
-              child: const Text('Solicitar este trámite'),
-            ),
-            OutlinedButton(
-              onPressed: () => _verPasos(t),
-              child: const Text('Ver pasos'),
-            ),
-          ]),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              ElevatedButton(
+                onPressed: () => _solicitar(t),
+                child: const Text('Solicitar este trámite'),
+              ),
+              OutlinedButton(
+                onPressed: () => _verPasos(t),
+                child: const Text('Ver pasos'),
+              ),
+            ],
+          ),
         ],
       ),
     );
@@ -322,24 +362,35 @@ class _AsistentePageState extends State<AsistentePage> {
                 if (m.opciones != null)
                   Padding(
                     padding: const EdgeInsets.only(top: 8),
-                    child: Wrap(spacing: 8, runSpacing: 8, children: [
-                      for (final o in m.opciones!)
-                        ActionChip(
-                          label: Text(o['nombre']),
-                          onPressed: () {
-                            _agregar(_Msg.usuario(o['nombre']));
-                            _agregar(_Msg.asistente(tramite: o));
-                          },
-                        ),
-                    ]),
+                    child: Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        for (final o in m.opciones!)
+                          ActionChip(
+                            label: Text(o['nombre']),
+                            onPressed: () {
+                              _agregar(_Msg.usuario(o['nombre']));
+                              _agregar(_Msg.asistente(tramite: o));
+                            },
+                          ),
+                      ],
+                    ),
                   ),
                 if (m.sugerencias != null)
                   Padding(
                     padding: const EdgeInsets.only(top: 8),
-                    child: Wrap(spacing: 8, runSpacing: 8, children: [
-                      for (final s in m.sugerencias!)
-                        ActionChip(label: Text(s), onPressed: () => _enviar(s)),
-                    ]),
+                    child: Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        for (final s in m.sugerencias!)
+                          ActionChip(
+                            label: Text(s),
+                            onPressed: () => _enviar(s),
+                          ),
+                      ],
+                    ),
                   ),
               ],
             ),
@@ -352,7 +403,15 @@ class _AsistentePageState extends State<AsistentePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Asistente FilaCero')),
+      appBar: AppBar(
+        title: Row(
+          children: [
+            Image.asset('assets/logo.png', height: 34),
+            const SizedBox(width: 10),
+            const Text('Asistente FilaCero'),
+          ],
+        ),
+      ),
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
@@ -364,7 +423,7 @@ class _AsistentePageState extends State<AsistentePage> {
                     controller: _scroll,
                     padding: const EdgeInsets.all(20),
                     itemCount: _msgs.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 12),
+                    separatorBuilder: (_, _) => const SizedBox(height: 12),
                     itemBuilder: (_, i) => _burbuja(_msgs[i]),
                   ),
                 ),
@@ -379,23 +438,26 @@ class _AsistentePageState extends State<AsistentePage> {
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-                  child: Row(children: [
-                    Expanded(
-                      child: TextField(
-                        controller: _c,
-                        textInputAction: TextInputAction.send,
-                        onSubmitted: (_) => _enviar(),
-                        decoration: const InputDecoration(
-                            hintText: 'Escribe tu duda...'),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: _c,
+                          textInputAction: TextInputAction.send,
+                          onSubmitted: (_) => _enviar(),
+                          decoration: const InputDecoration(
+                            hintText: 'Escribe tu duda...',
+                          ),
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 8),
-                    IconButton.filled(
-                      tooltip: 'Enviar',
-                      onPressed: _enviar,
-                      icon: const Icon(Icons.send_rounded),
-                    ),
-                  ]),
+                      const SizedBox(width: 8),
+                      IconButton.filled(
+                        tooltip: 'Enviar',
+                        onPressed: _enviar,
+                        icon: const Icon(Icons.send_rounded),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),

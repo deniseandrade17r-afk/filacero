@@ -35,7 +35,7 @@ class _AgendarCitaPageState extends State<AgendarCitaPage> {
 
   void _msg(String t) {
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(t)));
+    mostrarAviso(context, t);
   }
 
   String _soloFecha(DateTime d) =>

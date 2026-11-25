@@ -40,7 +40,7 @@ class _HorariosPageState extends State<HorariosPage> {
 
   void _msg(String t) {
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(t)));
+    mostrarAviso(context, t);
   }
 
   Future<void> _cargar() async {

@@ -228,7 +228,7 @@ class _InicioAlumnoPageState extends State<InicioAlumnoPage> {
                   Icons.assignment_rounded, () => irA('Seguimiento')),
               ValueListenableBuilder<int>(
                 valueListenable: noLeidas,
-                builder: (_, n, __) => _kpi(w, '$n', 'Avisos sin leer',
+                builder: (_, n, _) => _kpi(w, '$n', 'Avisos sin leer',
                     Icons.notifications_rounded, () => irA('Avisos')),
               ),
             ]);

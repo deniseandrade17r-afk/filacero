@@ -19,7 +19,7 @@ class _LoginPageState extends State<LoginPage> {
 
   void _msg(String text) {
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
+    mostrarAviso(context, text);
   }
 
   Future<void> _login() async {

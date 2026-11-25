@@ -30,7 +30,7 @@ class _DocumentosPageState extends State<DocumentosPage> {
 
   void _msg(String text) {
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
+    mostrarAviso(context, text);
   }
 
   Future<void> _cargar() async {

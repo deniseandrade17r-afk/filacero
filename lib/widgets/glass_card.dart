@@ -1,6 +1,9 @@
 import 'dart:ui';
 import 'package:material_ui/material_ui.dart';
+
 import '../theme/app_theme.dart';
+
+export '../utils/avisos_ui.dart';
 
 class GlassCard extends StatelessWidget {
   const GlassCard({

@@ -20,7 +20,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   void _msg(String text) {
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
+    mostrarAviso(context, text);
   }
 
   Future<void> _registrar() async {

@@ -20,7 +20,7 @@ class AsistenteTarjeta extends StatelessWidget {
             'assets/buho.png',
             height: 56,
             width: 56,
-            errorBuilder: (_, __, ___) =>
+            errorBuilder: (_, _, _) =>
                 const Icon(Icons.smart_toy_rounded, size: 40),
           ),
           const SizedBox(width: 14),

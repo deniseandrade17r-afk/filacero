@@ -1,5 +1,5 @@
-import 'package:material_ui/material_ui.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:material_ui/material_ui.dart';
 
 class AppColors {
   static const navy = Color(0xFF1B2A6B);
@@ -71,6 +71,32 @@ ThemeData buildTheme() {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         textStyle: const TextStyle(fontWeight: FontWeight.w700),
       ),
+    ),
+    // Avisos (SnackBar) flotantes y redondeados
+    snackBarTheme: SnackBarThemeData(
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: AppColors.navy,
+      contentTextStyle: GoogleFonts.plusJakartaSans(
+          color: Colors.white, fontWeight: FontWeight.w600),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      showCloseIcon: true,
+      closeIconColor: Colors.white70,
+      actionTextColor: AppColors.yellow,
+    ),
+    // Ventanas de confirmación (eliminar, cancelar, etc.)
+    dialogTheme: DialogThemeData(
+      backgroundColor: Colors.white.withValues(alpha: 0.97),
+      surfaceTintColor: Colors.transparent,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+      titleTextStyle: GoogleFonts.plusJakartaSans(
+          fontWeight: FontWeight.w800, fontSize: 20, color: AppColors.ink),
+      contentTextStyle:
+          GoogleFonts.plusJakartaSans(fontSize: 15, color: AppColors.ink),
+    ),
+    popupMenuTheme: PopupMenuThemeData(
+      color: Colors.white.withValues(alpha: 0.97),
+      surfaceTintColor: Colors.transparent,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
     ),
   );
 }
