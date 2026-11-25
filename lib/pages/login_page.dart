@@ -1,9 +1,11 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
 import '../widgets/glass_card.dart';
 import 'register_page.dart';
 import '../utils/correo.dart';
 import 'forgot_password_page.dart';
+import '../widgets/instalar_app_boton.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -106,6 +108,8 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       child: const Text('¿Olvidaste tu contraseña?'),
                     ),
+                    const SizedBox(height: 8),
+                    const InstalarAppBoton(),
                   ],
                 ),
               ),
