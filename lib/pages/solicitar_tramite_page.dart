@@ -5,6 +5,7 @@ import '../theme/app_theme.dart';
 import '../utils/fechas.dart';
 import '../widgets/glass_card.dart';
 import 'documentos_page.dart';
+import '../widgets/formato_tile.dart';
 
 class SolicitarTramitePage extends StatefulWidget {
   const SolicitarTramitePage({super.key, required this.tramite});
