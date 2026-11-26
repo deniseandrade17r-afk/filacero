@@ -3,9 +3,9 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../theme/app_theme.dart';
 import '../utils/fechas.dart';
+import '../widgets/formato_tile.dart';
 import '../widgets/glass_card.dart';
 import 'documentos_page.dart';
-import '../widgets/formato_tile.dart';
 
 class SolicitarTramitePage extends StatefulWidget {
   const SolicitarTramitePage({super.key, required this.tramite});
@@ -164,8 +164,9 @@ class _SolicitarTramitePageState extends State<SolicitarTramitePage> {
     final reqs = _lista(tr['requisitos']);
     final pasos = _lista(tr['pasos']);
     final obs = _lista(tr['observaciones']);
+    // Cada formato conserva su nombre y su enlace (url puede ser null).
     final formatos = ((tr['formatos'] as List?) ?? [])
-        .map((f) => (f as Map)['nombre'].toString())
+        .map((f) => Map<String, dynamic>.from(f as Map))
         .toList();
     final presencial = tr['modalidad'] == 'presencial';
 
@@ -203,7 +204,11 @@ class _SolicitarTramitePageState extends State<SolicitarTramitePage> {
                     ],
                     if (formatos.isNotEmpty) ...[
                       _titulo('Formatos (PDF)'),
-                      _vinetas(formatos, Icons.picture_as_pdf_outlined),
+                      for (final f in formatos)
+                        FormatoTile(
+                          nombre: '${f['nombre']}',
+                          url: f['url'] as String?,
+                        ),
                     ],
                     if (reqs.isNotEmpty) ...[
                       _titulo('Lo que necesitas para tu solicitud'),
